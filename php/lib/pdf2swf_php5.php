@@ -36,10 +36,16 @@ class pdf2swf
 
 	/**
 	* Method:convert
+     *
+     * 在线调用win组件  pdf转换成swf
 	*/
 	public function convert($doc,$page)
 	{
 		$output=array();
+        /*
+         * $pdfFilePath   没有转换过的pdf需要在线转换
+         * $swfFilePath   已经转换过的直接调用显示
+         * */
 		$pdfFilePath = $this->configManager->getConfig('path.pdf') . $doc;
 		$swfFilePath = $this->configManager->getConfig('path.swf') . $doc  . $page. ".swf";
 		
@@ -76,6 +82,10 @@ class pdf2swf
             }
 		}else
 			exec($command,$output,$return_var);
+        /*
+         * 开始转换  pdf2swftools
+         *
+         * */
 			
 		if($return_var==0 || strstr(strtolower($return_var),"notice")){
 			$s="[Converted]";

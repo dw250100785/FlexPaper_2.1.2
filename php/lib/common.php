@@ -52,7 +52,7 @@
 		if ($root{strlen($root)-1}!="/") $root=$root . "/";
 		return $root;
 	}
-	
+	//验证 swf名称
 	function validSwfParams($path,$doc,$page){
 		return !(	basename(realpath($path)) != $doc  ||
 				 	strlen($doc) > 255 ||
@@ -61,7 +61,7 @@
                     preg_match("=^[^/?*;:{}\\\\]+\.[^/?*;:{}\\\\]+$=", $path . $doc . $page)
 				);	
 	}
-	
+	//验证 pdf 名称
 	function validPdfParams($path,$doc,$page){
 		return !(	basename(realpath($path)) != $doc ||
 				 	strlen($doc) > 255 ||

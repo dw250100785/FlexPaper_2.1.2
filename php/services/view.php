@@ -18,10 +18,20 @@ require_once("../lib/splitpdf_php5.php");
 	$doc 		= $_GET["doc"];
 	$configManager 	= new Config();
 	$callback	= "";
+    /*
+     * 带上 pdf后缀
+     * $pdfdoc
+     * */
+
+    /*
+     * /*
+                * 调用services 中的view.php 处理pdf文档
+                * */
+
 
 	if(!endsWith($doc,'.pdf')){$pdfdoc 	= $doc . ".pdf";}else{$pdfdoc 	= $doc;}
-	if(isset($_GET["page"])){$page = $_GET["page"];}else{$page = "";}
-	if(isset($_GET["format"])){$format=$_GET["format"];}else{$format="swf";}
+	if(isset($_GET["page"])){$page = $_GET["page"];}else{$page = "";} //默认page  空
+	if(isset($_GET["format"])){$format=$_GET["format"];}else{$format="swf";}//默认  format  swf
 	if($configManager->getConfig('splitmode')=='true'){$swfdoc 	= $pdfdoc . "_" . $page . ".swf";}else{$swfdoc 	= $pdfdoc . ".swf";}
 	if(isset($_GET["callback"])){$callback = $_GET["callback"];}else{$callback = "";}
     if($configManager->getConfig('splitmode')=='true'){$jsondoc = $pdfdoc . "_" . $page . ".js";}else{$jsondoc = $pdfdoc . ".js";}
@@ -32,8 +42,9 @@ require_once("../lib/splitpdf_php5.php");
 
 	$messages 		= "";
 
-	$swfFilePath 	= $configManager->getConfig('path.swf') . $swfdoc;
-	$pdfFilePath 	= $configManager->getConfig('path.pdf') . $pdfdoc;
+	$swfFilePath 	= $configManager->getConfig('path.swf') . $swfdoc;//swf路径
+
+	$pdfFilePath 	= $configManager->getConfig('path.pdf') . $pdfdoc;//pdf路径
 	$pdfSplitPath	= $configManager->getConfig('path.swf') . $pdfdoc . "_" . $page . ".pdf";
 	$pngFilePath 	= $configManager->getConfig('path.swf') . $pngdoc;
 	$jpgCachePath 	= $configManager->getConfig('path.swf') . $jpgcachedoc;
@@ -55,11 +66,32 @@ require_once("../lib/splitpdf_php5.php");
 	if(!$validatedConfig){
 		echo "Error:Cannot read directories set up in configuration file, please check your configuration.";
 	}else if(	!validPdfParams($pdfFilePath,$pdfdoc,$page) /*|| !validSwfParams($swfFilePath,$swfdoc,$page) */){
+
+        /*
+         * 验证pdf是否合法
+         * //验证 pdf 名称
+         *
+         *
+            function validPdfParams($path,$doc,$page){
+                return !(	basename(realpath($path)) != $doc ||
+                            strlen($doc) > 255 ||
+                            strlen($page) > 255 ||
+                            strpos($path . $doc . $page, "../") > 0 ||
+                            preg_match("=^[^/?*;:{}\\\\]+\.[^/?*;:{}\\\\]+$=", $path . $doc . $page)
+                        );
+            }
+         *
+         * */
 		echo "Error:Incorrect file specified, please check your path";
 	}else{
 		if($format == "swf" || $format == "png" || $format == "pdf" || $format == "jpg" || $format == "jpgpageslice"){
 
 			// converting pdf files to swf format
+            /*
+             * 没有swf则需要在线生成
+             * pdf2swftools 转换
+             *
+             * */
 			if(!file_exists($swfFilePath)){
 				$pdfconv=new pdf2swf();
 				$messages=$pdfconv->convert($pdfdoc,$page);
@@ -304,7 +336,10 @@ require_once("../lib/splitpdf_php5.php");
 					echo file_get_contents($pdfFilePath);
 				}
 			}
-
+            /*
+             * 先寻找swf如果找到就输出
+             *否则 在线转换
+             * */
 			// writing files to output
 			if(file_exists($swfFilePath)){
 				if($format == "swf"){

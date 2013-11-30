@@ -1,13 +1,49 @@
 <?php date_default_timezone_set('America/New_York'); ?>
-<?php
+
+    <!--
+
+
+
+    {
+    "allowcache":true,
+    "splitmode":"false",
+    "path.pdf":"G:\\wamp\\www\\FlexPaper\\pdf\\",
+    "path.swf":"G:\\wamp\\www\\FlexPaper\\docs\\",
+    "renderingorder.primary":null,
+    "renderingorder.secondary":null,
+    "cmd.conversion.singledoc":"pdf2swf \"{path.pdf}{pdffile}\" -o \"{path.swf}{pdffile}.swf\" -f -T 9 -t -s storeallcharacters -s linknameurl",
+    "cmd.conversion.splitpages":"pdf2swf \"{path.pdf}{pdffile}\" -o \"{path.swf}{pdffile}_%.swf\" -f -T 9 -t -s storeallcharacters -s linknameurl",
+    "cmd.conversion.renderpage":"swfrender \"{path.swf}{swffile}\" -p {page} -o \"{path.swf}{pdffile}_{page}.png\" -X 1024 -s keepaspectratio",
+    "cmd.conversion.rendersplitpage":"swfrender \"{path.swf}{swffile}\" -o \"{path.swf}{pdffile}_{page}.png\" -X 1024 -s keepaspectratio",
+    "cmd.conversion.jsonfile":"pdf2json \"{path.pdf}{pdffile}\" -enc UTF-8 -compress \"{path.swf}{pdffile}.js\"",
+    "cmd.conversion.splitjsonfile":"pdf2json \"{path.pdf}{pdffile}\" -enc UTF-8 -compress -split 10 \"{path.swf}{pdffile}_%.js\"",
+    "cmd.searching.extracttext":"swfstrings \"{swffile}\"",
+    "cmd.query.swfwidth":"swfdump {swffile} -X",
+    "cmd.query.swfheight":"swfdump \"{swffile}\" -Y",
+    "pdf2swf":false,
+    "admin.username":"admin",
+    "admin.password":"123456",
+    "licensekey":"gpl"
+    }
+
+
+    <?php
 class Config {
 	protected $config;
 	protected $configFileName;
 
 	public function __construct() {
+        /*
+         * root 为 flexpaper
+         *
+         * */
 		if (!defined('ROOT')) {
 			define('ROOT', dirname(dirname(dirname(__FILE__))));
 		}
+        /*
+         * app_dir 为php
+         *
+         * */
 
 		if (!defined('APP_DIR')) {
 			define('APP_DIR', basename(dirname(dirname(__FILE__))));
@@ -32,13 +68,45 @@ class Config {
 	public function getDocUrl() {
 		return "<br/><br/>Click <a href='http://flexpaper.devaldi.com/docs_php.jsp'>here</a> for more information on configuring FlexPaper with PHP";
 	}
-
+/*
+ *
+ * 读取配置信息
+ *
+ * win下的配置信息为
+ *
+    {
+    "allowcache":true,
+    "splitmode":"false",
+    "path.pdf":"G:\\wamp\\www\\FlexPaper\\pdf\\",
+    "path.swf":"G:\\wamp\\www\\FlexPaper\\docs\\",
+    "renderingorder.primary":null,
+    "renderingorder.secondary":null,
+    "cmd.conversion.singledoc":"pdf2swf \"{path.pdf}{pdffile}\" -o \"{path.swf}{pdffile}.swf\" -f -T 9 -t -s storeallcharacters -s linknameurl",
+    "cmd.conversion.splitpages":"pdf2swf \"{path.pdf}{pdffile}\" -o \"{path.swf}{pdffile}_%.swf\" -f -T 9 -t -s storeallcharacters -s linknameurl",
+    "cmd.conversion.renderpage":"swfrender \"{path.swf}{swffile}\" -p {page} -o \"{path.swf}{pdffile}_{page}.png\" -X 1024 -s keepaspectratio",
+    "cmd.conversion.rendersplitpage":"swfrender \"{path.swf}{swffile}\" -o \"{path.swf}{pdffile}_{page}.png\" -X 1024 -s keepaspectratio",
+    "cmd.conversion.jsonfile":"pdf2json \"{path.pdf}{pdffile}\" -enc UTF-8 -compress \"{path.swf}{pdffile}.js\"",
+    "cmd.conversion.splitjsonfile":"pdf2json \"{path.pdf}{pdffile}\" -enc UTF-8 -compress -split 10 \"{path.swf}{pdffile}_%.js\"",
+    "cmd.searching.extracttext":"swfstrings \"{swffile}\"",
+    "cmd.query.swfwidth":"swfdump {swffile} -X",
+    "cmd.query.swfheight":"swfdump \"{swffile}\" -Y",
+    "pdf2swf":false,
+    "admin.username":"admin",
+    "admin.password":"123456",
+    "licensekey":"gpl"
+    }
+ *
+ *
+ * */
 	public function getConfigFilename() {
 		if(strstr(PHP_OS, "WIN"))
 			return ROOT . '\\' . APP_DIR . '\\config\\config.ini.win.php';
 		return ROOT . '/' . APP_DIR . '/config/config.ini.nix.php';
 	}
-
+/*
+ *
+ * 写入配置文件   就是 config/config.ini.win.php文件
+ * */
 	public function saveConfig($array) {
 		$this->write_php_ini($array, $this->configFileName);
 	}
@@ -91,6 +159,14 @@ class Config {
 	}
 
 	function safefilerewrite($fileName, $dataToSave, $log = "w") {
+        /*
+         *
+         * 为什么要添加DO NOT REMOVE THIS LINE  ？？？
+         * 不允许修改？？？
+         *
+         * 启用和关闭配置文件
+         *
+         * */
 		$dataToSave = "; <?php exit; ?> DO NOT REMOVE THIS LINE\n" . $dataToSave;
 
 		if ($fp = fopen($fileName, $log)) {

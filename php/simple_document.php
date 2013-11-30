@@ -2,8 +2,12 @@
 /* This section can be removed if you would like to reuse the PHP example outside of this PHP sample application */
 require_once("lib/config.php");
 require_once("lib/common.php");
-
+/*
+ * 单页显示pdf
+ *
+ * */
 $configManager = new Config();
+//初始化配置信息
 if($configManager->getConfig('admin.password')==null){
 	$url = 'setup.php';
 	header("Location: $url");
@@ -31,20 +35,25 @@ if($configManager->getConfig('admin.password')==null){
 		<div id="documentViewer" class="flexpaper_viewer" style="width:770px;height:500px"></div>
 
 	        <script type="text/javascript">
+                /*
+                * 调用services 中的view.php 处理pdf文档
+                * */
 		        function getDocumentUrl(document){
+                    //.replace  正则替换  将 {doc}替换为  参数名
+
 					return "services/view.php?doc={doc}&format={format}&page={page}".replace("{doc}",document);
 		        }
 
 		        function getDocQueryServiceUrl(document){
 		        	return "services/swfsize.php?doc={doc}&page={page}".replace("{doc}",document);
 		        }
-
+                //默认为 paper.pdf
 		        var startDocument = "<?php if(isset($_GET["doc"])){echo $_GET["doc"];}else{?>Paper.pdf<?php } ?>";
 
 	            $('#documentViewer').FlexPaperViewer(
 				 { config : {
 
-						 DOC : escape(getDocumentUrl(startDocument)),
+						 DOC : escape(getDocumentUrl(startDocument)),//生成的swf文件用来显示
 						 Scale : 0.6,
 						 ZoomTransition : 'easeOut',
 						 ZoomTime : 0.5,

@@ -81,7 +81,30 @@ class pdf2swf
                 $_SESSION['CONVERSION_' . $hash] = true;
             }
 		}else
+          //  echo $command;exit;
+
+            /*
+             * swftools  cmd
+             *将 pdf2swf.exe加入系统环境变量
+             *
+             * exec('"C:\\Program Files\\SWFTools\\pdf2swf.exe" "C:\\Program Files\\xampp\\htdocs\\system\\logs\\reports\\temp\\sample.pdf" -o "C:\\Program Files\\xampp\\htdocs\\system\\logs\\reports\\temp\\sample.swf" -f -T 9 -t -s storeallcharacters');
+             *
+             * */
+
+        /*
+         *
+         * pdf2swf "G:\wamp\www\FlexPaper_2.1.2\php\pdf\G.pdf" -o "G:\wamp\www\FlexPaper_2.1.2\php\docs\G.pdf.swf" -f -T 9 -t -s storeallcharacters -s linknameurl
+         * */
+           //C:\Program Files (x86)\SWFTools\pdf2swf.exe
+            $swftoos_path = "C:\\Program Files (x86)\\SWFTools\\pdf2swf.exe";
+           // $command = $swftoos_path.' '.$command;
+            $aim = 'pdf2swf';
+            $command = str_replace($aim,'"'.$swftoos_path.'"',$command);
+        echo $command.'<br/>';
+
 			exec($command,$output,$return_var);
+
+
         /*
          * 开始转换  pdf2swftools
          *
@@ -103,6 +126,11 @@ class pdf2swf
             		
             		$s = str_replace("Internal error","PDF conversion error",$s);
             	}else{
+                    /*
+                     *
+                     * 报错
+                     * 转换不成功
+                     * */
 	                $s=" Error converting document, make sure the conversion tool is installed and that correct user permissions are applied to the SWF Path directory" . $this->configManager->getDocUrl();
             	}
             }

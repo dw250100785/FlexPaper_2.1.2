@@ -79,7 +79,7 @@ if($configManager->getConfig('admin.password')==null){
 						 localeDirectory : '../locale/',
 
 						 JSONDataType : 'jsonp',
-						 key : '<?php echo $configManager->getConfig('licensekey') ?>',
+						 key : '<?php echo $configManager->getConfig('licensekey') ?>',//for what ??
 
   						 localeChain: 'en_US'
 

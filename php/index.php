@@ -7,6 +7,7 @@
 
 	// Check for user configuration entries. If missing redirect to setup page.
 	require_once("lib/config.php");
+
 	require_once("lib/common.php");
 	$configManager = new Config();
 	
@@ -123,6 +124,13 @@ $(function() {
 		
 		<div style="clear:both;background-color:#fff;padding: 20px 10px 20px 30px;border:0px;-webkit-box-shadow: rgba(0, 0, 0, 0.246094) 0px 4px 8px 0px;min-width:900px;float:left;width:900px;margin-left:10px;margin-bottom:50px;">
 			<h3>Available Documents</h3>
+            <div>
+                pdf路径：<span><?php echo $configManager->getConfig('path.pdf') ?></span>
+                <br/>
+                swf路径：<span><?php echo $configManager->getConfig('path.swf') ?></span>
+                <br/>
+                pdf2swftools安装路径：<span><?php echo $configManager->getConfig('cmd.conversion.singledoc') ?></span>
+            </div>
 			<form method="post" action="index.php">
 			<div style="float:left;position:absolute;"><div style="position:absolute;left:0px;top:0px;"><button class="tiny main n_button" type="submit"  onclick=""><span></span><em style="min-width:100px"><img src="admin_files/images/upload.png" style="padding-top:2px;">&nbsp;Upload</em></button>&nbsp;<br/></div><div style="position:absolute;left:0px;top:0px;"><input id="file_upload" type="file" name="Filedata" /></div></div>
 			<div style="float:left;padding-left:120px;"><button class="tiny main n_button" onclick="return window.confirm('Are you sure you want to delete these files?');" type="submit"><span></span><em style="min-width:100px"><img src="admin_files/images/delete.png" style="padding-top:2px;">&nbsp;Delete</em></button>&nbsp;</div><br/>
